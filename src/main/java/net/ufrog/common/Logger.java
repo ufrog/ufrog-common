@@ -185,16 +185,14 @@ public class Logger {
 	 * @return
 	 */
 	public static org.slf4j.Logger getLogger(Boolean caller) {
-		if (caller) {
-			return LoggerFactory.getLogger(Caller.caller(3).getClassName());
-		}
-		return logger;
+		return caller ? LoggerFactory.getLogger(Caller.caller(5).getClassName()) : logger;
 	}
 	
 	/**
 	 * @return
 	 */
 	public static org.slf4j.Logger getLogger() {
+		if (caller == null) caller = Boolean.valueOf(Property.getValue("app.logger.caller", "false"));
 		return getLogger(caller);
 	}
 }

@@ -64,9 +64,19 @@ public abstract class Context {
 	 * 
 	 * @return
 	 */
+	public static Context current() {
+		return current.get();
+	}
+	
+	/**
+	 * 当前线程实例
+	 * 
+	 * @param requiredType
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Context> T current() {
-		return (T) current.get();
+	public static <T extends Context> T current(Class<T> requiredType) {
+		return (T) current();
 	}
 	
 	/**

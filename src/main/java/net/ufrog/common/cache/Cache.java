@@ -143,7 +143,7 @@ public class Cache {
 		if (getImpl().safeSet(key, value, expiration)) {
 			return true;
 		}
-		Logger.info("set '%s - %s' into cache failure!", key, value);
+		Logger.warn("set '%s - %s' into cache failure!", key, value);
 		return false;
 	}
 	
@@ -218,7 +218,7 @@ public class Cache {
 		if (getImpl().safeReplace(key, value, expiration)) {
 			return true;
 		}
-		Logger.info("replace '%s - %s' into cache failure!", key, value);
+		Logger.warn("replace '%s - %s' into cache failure!", key, value);
 		return false;
 	}
 	
