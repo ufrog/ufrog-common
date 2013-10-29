@@ -12,7 +12,8 @@ import net.ufrog.common.utils.Strings.StringSet;
  */
 public class ServiceException extends RuntimeException {
 
-	private static final long serialVersionUID = 3212842635807077979L;
+	private static final long serialVersionUID 	= 3212842635807077979L;
+	private static final String DEFAULT_KEY		= "app.exception";
 	
 	/** 代码 */
 	private String code;
@@ -25,7 +26,7 @@ public class ServiceException extends RuntimeException {
 	 */
 	public ServiceException() {
 		super();
-		this.generateCode();
+		generateCode();
 	}
 	
 	/**
@@ -35,7 +36,7 @@ public class ServiceException extends RuntimeException {
 	 */
 	public ServiceException(String message) {
 		super(message);
-		this.generateCode();
+		generateCode();
 	}
 	
 	/**
@@ -46,7 +47,7 @@ public class ServiceException extends RuntimeException {
 	 */
 	public ServiceException(String message, Throwable cause) {
 		super(message, cause);
-		this.generateCode();
+		generateCode();
 	}
 	
 	/**
@@ -65,7 +66,7 @@ public class ServiceException extends RuntimeException {
 	 * 
 	 * @param message
 	 * @param key
-	 * @param args
+	 * @param cause
 	 */
 	public ServiceException(String message, String key, Throwable cause) {
 		this(message, cause);
@@ -89,6 +90,9 @@ public class ServiceException extends RuntimeException {
 	 * @see #key
 	 */
 	public String getKey() {
+		if (key == null) {
+			key = DEFAULT_KEY;
+		}
 		return key;
 	}
 
