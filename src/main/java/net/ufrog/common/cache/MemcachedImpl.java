@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 import net.ufrog.common.Logger;
-import net.ufrog.common.Property;
+import net.ufrog.common.app.App;
 import net.ufrog.common.utils.Strings;
 
 import com.whalin.MemCached.MemCachedClient;
@@ -16,36 +16,44 @@ import com.whalin.MemCached.SockIOPool;
  * Memcached 实现
  *
  * @author ultrafrog
- * @version 1.0, 2013-4-15
+ * @version 1.0, 2013-04-15
  * @since 1.0
  */
-public class MemcachedImpl implements CacheImpl {
+public class MemcachedImpl implements Cache {
 
-	protected static MemcachedImpl singleton;
+	private static final String CONF_MAX_IDLE		= App.config("cache.max.idle", "1800000");
+	private static final String CONF_MAX_CONN		= App.config("cache.max.conn", "250");
+	private static final String CONF_MIN_CONN		= App.config("cache.min.conn", "5");
+	private static final String CONF_INIT_CONN		= App.config("cache.init.conn", "5");
+	private static final String CONF_MAINT_SLEEP	= App.config("cache.maint.sleep", "30000");
+	private static final String CONF_MAX_BUSY_TIME	= App.config("cache.max.busy.time", "60000");
 	
-	protected MemCachedClient client;
-	protected String[] servers;
-	protected Integer[] weights;
+	private static final String CONF_SERVER			= "app.server";
+	private static final String CONF_SERVER_PREFIX	= "app.server.";
+	private static final String CONF_WEIGHT			= "app.weight";
+	private static final String CONF_WEIGHT_PERFIX	= "app.weight.";
 	
-	/**
-	 * 构造函数
-	 */
+	private static MemcachedImpl singleton;
+	
+	private MemCachedClient client;
+	private String[] servers;
+	private Integer[] weights;
+	
+	/** 构造函数 */
 	protected MemcachedImpl() {
-		// 初始化
 		client = new MemCachedClient();
 		servers = getServers();
 		weights = getWeights();
 		SockIOPool pool = SockIOPool.getInstance();
 		
-		// 设置属性
 		pool.setServers(servers);
 		pool.setWeights(weights);
-		pool.setMaxIdle(Property.getInteger("cache.max.idle", 1800000));
-		pool.setMaxConn(Property.getInteger("cache.max.conn", 250));
-		pool.setMinConn(Property.getInteger("cache.min.conn", 5));
-		pool.setInitConn(Property.getInteger("cache.init.conn", 5));
-		pool.setMaintSleep(Property.getInteger("cache.maint.sleep", 30000));
-		pool.setMaxBusyTime(Property.getInteger("cache.max.busy.time", 60000));
+		pool.setMaxIdle(Integer.valueOf(CONF_MAX_IDLE));
+		pool.setMaxConn(Integer.valueOf(CONF_MAX_CONN));
+		pool.setMinConn(Integer.valueOf(CONF_MIN_CONN));
+		pool.setInitConn(Integer.valueOf(CONF_INIT_CONN));
+		pool.setMaintSleep(Integer.valueOf(CONF_MAINT_SLEEP));
+		pool.setMaxBusyTime(Integer.valueOf(CONF_MAX_BUSY_TIME));
 		pool.initialize();
 		Logger.info("initialize memcached servers: %s", Arrays.asList(servers));
 	}
@@ -169,13 +177,11 @@ public class MemcachedImpl implements CacheImpl {
 	 */
 	protected String[] getServers() {
 		ArrayList<String> servers = new ArrayList<String>();
-		if (!Strings.empty(Property.getValue("cache.server"))) {
-			servers.add(Property.getValue("cache.server"));
-		} else if (!Strings.empty(Property.getValue("cache.1.server"))) {
-			int i = 1;
-			while (!Strings.empty(Property.getValue("cache." + i + ".server"))) {
-				servers.add(Property.getValue("cache." + i + ".server"));
-				i++;
+		if (!Strings.empty(App.config(CONF_SERVER))) {
+			servers.add(App.config(CONF_SERVER));
+		} else {
+			for (int i = 1; !Strings.empty(App.config(CONF_SERVER_PREFIX + i)); i++) {
+				servers.add(App.config(CONF_SERVER_PREFIX + i));
 			}
 		}
 		return servers.toArray(new String[] {});
@@ -188,13 +194,11 @@ public class MemcachedImpl implements CacheImpl {
 	 */
 	protected Integer[] getWeights() {
 		ArrayList<Integer> weights = new ArrayList<Integer>();
-		if (!Strings.empty(Property.getValue("cache.weight"))) {
-			weights.add(Property.getInteger("cache.weight", 1));
-		} else if (!Strings.empty(Property.getValue("cache.1.weight"))) {
-			int i = 1;
-			while (!Strings.empty(Property.getValue("cache." + i + ".weight"))) {
-				weights.add(Property.getInteger("cache." + i + ".weight", 1));
-				i++;
+		if (!Strings.empty(App.config(CONF_WEIGHT))) {
+			weights.add(Integer.valueOf(App.config(CONF_WEIGHT)));
+		} else {
+			for (int i = 1; !Strings.empty(App.config(CONF_WEIGHT_PERFIX + i)); i++) {
+				weights.add(Integer.valueOf(App.config(CONF_WEIGHT_PERFIX + i)));
 			}
 		}
 		return weights.toArray(new Integer[] {});
@@ -206,9 +210,7 @@ public class MemcachedImpl implements CacheImpl {
 	 * @return
 	 */
 	public static MemcachedImpl getInstance() {
-		if (singleton == null) {
-			singleton = new MemcachedImpl();
-		}
+		if (singleton == null) singleton = new MemcachedImpl();
 		return singleton;
 	}
 }

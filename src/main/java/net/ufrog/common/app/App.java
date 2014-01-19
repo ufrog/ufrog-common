@@ -4,22 +4,23 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
 
+import net.ufrog.common.exception.NotSignInException;
 import net.ufrog.common.exception.ServiceException;
 import net.ufrog.common.utils.Strings;
 
 /**
- * 应用环境
+ * 应用信息
  *
  * @author ultrafrog
- * @version 1.0, 2013-10-1
+ * @version 1.0, 2013-10-01
  * @since 1.0
  */
 public abstract class App {
 
-	private static final String PATH_CONFIG = "/application.conf";
+	private static final String PATH_CONFIG 	= "/application.conf";
 	
-	private static ThreadLocal<App> current = new ThreadLocal<App>();
-	private static Properties properties = null;
+	private static ThreadLocal<App> current 	= new ThreadLocal<App>();
+	private static Properties properties 		= null;
 	
 	/**
 	 * 读取用户
@@ -67,32 +68,31 @@ public abstract class App {
 	public abstract String getMessage(String key, Object... args);
 	
 	/**
-	 * 读取当前应用环境
+	 * 当前信息
 	 * 
 	 * @return
 	 */
-	public static App get() {
+	public static App current() {
 		return current.get();
 	}
 	
 	/**
-	 * 读取当前应用环境
+	 * 当前信息
 	 * 
 	 * @param requiredType
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends App> T get(Class<T> requiredType) {
-		return (T) get();
+	public static <T extends App> T current(Class<T> requiredType) {
+		return requiredType.cast(current());
 	}
 	
 	/**
-	 * 设置当前应用环境
+	 * 当前信息
 	 * 
 	 * @param app
 	 * @return
 	 */
-	public static <T extends App> T set(T value) {
+	public static <T extends App> T current(T value) {
 		current.set(value);
 		return value;
 	}
@@ -103,7 +103,9 @@ public abstract class App {
 	 * @return
 	 */
 	public static AppUser user() {
-		return get().getUser();
+		AppUser user = current().getUser();
+		if (user == null) throw new NotSignInException();
+		return user;
 	}
 	
 	/**
@@ -114,7 +116,7 @@ public abstract class App {
 	 * @return
 	 */
 	public static String message(String key, Object... args) {
-		return get().getMessage(key, args);
+		return current().getMessage(key, args);
 	}
 	
 	/**

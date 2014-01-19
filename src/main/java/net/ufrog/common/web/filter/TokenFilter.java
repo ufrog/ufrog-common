@@ -9,17 +9,17 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import net.ufrog.common.Context;
 import net.ufrog.common.Logger;
+import net.ufrog.common.app.App;
+import net.ufrog.common.app.WebApp;
 import net.ufrog.common.exception.ServiceException;
 import net.ufrog.common.utils.Strings;
-import net.ufrog.common.web.WebContext;
 
 /**
  * 令牌过滤器
  *
  * @author ultrafrog
- * @version 1.0, 2013-4-24
+ * @version 1.0, 2013-04-24
  * @since 1.0
  */
 public class TokenFilter implements Filter {
@@ -39,14 +39,14 @@ public class TokenFilter implements Filter {
 	 */
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
-		if (!WebContext.isResource(req)) {
+		if (!WebApp.resource(req)) {
 			String token = req.getParameter(PARAM_TOKEN);
 			if (!Strings.empty(token)) {
-				if (!Strings.equals(token, Context.token())) {
-					Logger.warn("can not match between '%s' and '%s'", token, Context.token());
+				if (!Strings.equals(token, App.current().getToken())) {
+					Logger.warn("can not match between '%s' and '%s'", token, App.current().getToken());
 					throw new ServiceException("the token is not match!", "exception.token");
 				}
-				Context.token(true);
+				App.current().updateToken();
 			}
 		}
 		chain.doFilter(req, resp);

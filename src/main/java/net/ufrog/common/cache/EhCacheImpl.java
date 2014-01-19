@@ -14,7 +14,7 @@ import net.ufrog.common.Logger;
  * @version 1.0, 2012-11-30
  * @since 1.0
  */
-public class EhCacheImpl implements CacheImpl {
+public class EhCacheImpl implements Cache {
 
 	private static final String CACHE_NAME = "appDefault";
 	
@@ -23,9 +23,7 @@ public class EhCacheImpl implements CacheImpl {
 	private CacheManager cacheManager;
 	private net.sf.ehcache.Cache cache;
 	
-	/**
-	 * 构造函数
-	 */
+	/** 构造函数 */
 	protected EhCacheImpl() {
 		cacheManager = CacheManager.create();
 		cacheManager.addCache(CACHE_NAME);
@@ -192,9 +190,7 @@ public class EhCacheImpl implements CacheImpl {
 	 * @return
 	 */
 	public static EhCacheImpl getInstance() {
-		if (singleton == null) {
-			singleton = new EhCacheImpl();
-		}
+		if (singleton == null) singleton = new EhCacheImpl();
 		return singleton;
 	}
 }

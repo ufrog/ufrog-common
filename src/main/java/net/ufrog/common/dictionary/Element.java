@@ -1,4 +1,4 @@
-package net.ufrog.common.dictionary.annotation;
+package net.ufrog.common.dictionary;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

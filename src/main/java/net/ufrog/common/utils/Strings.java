@@ -15,21 +15,18 @@ import java.util.Random;
 public abstract class Strings {
 
 	/**
-	 * 判断字符串是否为空
+	 * 判断是否为空
 	 * 
 	 * @param str
 	 * @return 
 	 */
 	public static boolean empty(String str) {
-		if (null == str || str.length() == 0) {
-			return true;
-		}
-		return false;
+		return (str == null || str.length() == 0); 
 	}
 	
 	/**
-	 * 判断字符串是否为空<br>
-	 * 如果字符串为空则返回默认值
+	 * 判断是否为空<br>
+	 * 如果为空则返回默认值
 	 * 
 	 * @param str
 	 * @param defaultValue
@@ -40,21 +37,18 @@ public abstract class Strings {
 	}
 	
 	/**
-	 * 判断字符串是否为空白
+	 * 判断是否为空白
 	 * 
 	 * @param str
 	 * @return
 	 */
 	public static boolean blank(String str) {
-		if (null == str || str.trim().length() == 0) {
-			return true;
-		}
-		return false;
+		return (str == null || str.trim().length() == 0);
 	}
 	
 	/**
-	 * 判断字符串是否为空白<br>
-	 * 如果字符串为空白则返回默认值
+	 * 判断是否为空白<br>
+	 * 如果为空白则返回默认值
 	 * 
 	 * @param str
 	 * @param defaultValue
@@ -65,7 +59,7 @@ public abstract class Strings {
 	}
 	
 	/**
-	 * 判断两个字符串是否相同
+	 * 判断是否相同
 	 * 
 	 * @param one
 	 * @param another
@@ -73,14 +67,29 @@ public abstract class Strings {
 	 * @see java.lang.String#equals(Object)
 	 */
 	public static boolean equals(String one, String another) {
-		if (one == another || (one != null && one.equals(another))) {
-			return true;
-		}
-		return false;
+		return (one == another || (one != null && one.equals(another)));
 	}
 	
 	/**
-	 * 截断字符串
+	 * 随机值
+	 * 
+	 * @param length
+	 * @param set
+	 * @param sets
+	 * @return
+	 */
+	public static String random(int length, String set, String... sets) {
+		StringBuilder result = builder(length);
+		StringBuilder builder = builder(sets).append(set);
+		Random random = new Random();
+		for (int i = 0; i < length; i++) {
+			result.append(builder.charAt(random.nextInt(builder.length())));
+		}
+		return result.toString();
+	}
+
+	/**
+	 * 截断
 	 * 
 	 * @param str
 	 * @param len
@@ -96,30 +105,7 @@ public abstract class Strings {
 	}
 	
 	/**
-	 * 生成随机字符串
-	 * 
-	 * @param length
-	 * @param set
-	 * @param sets
-	 * @return
-	 */
-	public static String random(int length, String set, String... sets) {
-		// 初始化
-		StringBuffer result = buffer(length);
-		StringBuffer buffer = buffer(sets).append(set);
-		Random random = new Random();
-		
-		// 生成随机字符并组成字符串
-		for (int i = 0; i < length; i++) {
-			result.append(buffer.charAt(random.nextInt(buffer.length())));
-		}
-		
-		// 返回结果
-		return result.toString();
-	}
-	
-	/**
-	 * 拆分字符串
+	 * 拆分
 	 * 
 	 * @param str
 	 * @param regex
@@ -130,24 +116,22 @@ public abstract class Strings {
 	}
 	
 	/**
-	 * 合并集合成字符串
+	 * 合并
 	 * 
 	 * @param objs
 	 * @param symbol
 	 * @return
 	 */
 	public static String implode(Collection<Object> objs, String symbol) {
-		StringBuffer buffer = buffer(50);
-		for (Object obj: objs) {
-			buffer.append(symbol).append(obj.toString());
-		}
+		StringBuffer buffer = buffer();
+		for (Object obj: objs) buffer.append(symbol).append(obj.toString());
 		return buffer.substring(symbol.length());
 	}
 	
 	/**
-	 * 转换字符串数组
+	 * 转换数组
 	 * 
-	 * @param	strs
+	 * @param strs
 	 * @return
 	 */
 	public static String[] array(String... strs) {
@@ -194,9 +178,7 @@ public abstract class Strings {
 	 */
 	public static StringBuffer buffer(String... strs) {
 		StringBuffer buffer = buffer();
-		for (String s: strs) {
-			buffer.append(s);
-		}
+		for (String s: strs) buffer.append(s);
 		return buffer;
 	}
 	
@@ -230,6 +212,18 @@ public abstract class Strings {
 	 */
 	public static StringBuilder builder() {
 		return builder(16);
+	}
+	
+	/**
+	 * 创建 <code>StringBuilder</code> 实例
+	 * 
+	 * @param strs
+	 * @return
+	 */
+	public static StringBuilder builder(String... strs) {
+		StringBuilder builder = builder();
+		for (String s: strs) builder.append(s);
+		return builder;
 	}
 	
 	/**

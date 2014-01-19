@@ -1,6 +1,6 @@
 package net.ufrog.common.utils;
 
-import net.ufrog.common.cache.Cache;
+import net.ufrog.common.cache.Caches;
 import net.ufrog.common.cache.EhCacheImpl;
 import net.ufrog.common.cache.MemcachedImpl;
 
@@ -19,13 +19,13 @@ public class CacheTest {
 	 */
 	@Test
 	public void testCache() throws InterruptedException {
-		Cache.set("hello", "world", "1s");
-		Assert.assertNotNull(Cache.get("hello"));
-		Assert.assertNull(Cache.get("world"));
-		Assert.assertEquals("world", Cache.get("hello"));
+		Caches.set("hello", "world", "1s");
+		Assert.assertNotNull(Caches.get("hello"));
+		Assert.assertNull(Caches.get("world"));
+		Assert.assertEquals("world", Caches.get("hello"));
 		
 		Thread.sleep(2000);
-		Assert.assertNull(Cache.get("hello"));
+		Assert.assertNull(Caches.get("hello"));
 	}
 	
 	/**
@@ -35,7 +35,7 @@ public class CacheTest {
 	public void testEhCache() throws InterruptedException {
 		EhCacheImpl cache = EhCacheImpl.getInstance();
 		cache.set("hello", "china", 1);
-		Assert.assertEquals("china", Cache.get("hello"));
+		Assert.assertEquals("china", Caches.get("hello"));
 		
 		Thread.sleep(2000);
 		Assert.assertNull(cache.get("hello"));

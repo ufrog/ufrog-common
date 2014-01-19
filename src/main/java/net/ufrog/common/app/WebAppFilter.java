@@ -1,4 +1,4 @@
-package net.ufrog.common.web.filter;
+package net.ufrog.common.app;
 
 import java.io.IOException;
 
@@ -12,18 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.ufrog.common.Logger;
-import net.ufrog.common.web.WebContext;
 
 /**
- * 互联网上下文过滤器
- *
  * @author ultrafrog
- * @version 1.0, 2013-8-23
- * @since 1.0
+ * @version 0.1, 2014-01-19
+ * @since 0.1
  */
-public class WebContextFilter implements Filter {
+public class WebAppFilter implements Filter {
 
-	public static final String PARAM_CONTEXT = "context";
+	public static final String PARAM_APP = "app";
 	
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -31,7 +28,7 @@ public class WebContextFilter implements Filter {
 	@Override
 	public void init(FilterConfig config) throws ServletException {
 		Logger.info("initialize application filter");
-		WebContext.initialize(config.getServletContext());
+		WebApp.initialize(config.getServletContext());
 		Logger.info("application filter is running...");
 	}
 	
@@ -40,9 +37,7 @@ public class WebContextFilter implements Filter {
 	 */
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
-		if (!WebContext.isResource(req)) {
-			req.setAttribute(PARAM_CONTEXT, WebContext.create((HttpServletRequest) req, (HttpServletResponse) resp));
-		}
+		if (!WebApp.resource(req)) req.setAttribute(PARAM_APP, WebApp.create(HttpServletRequest.class.cast(req), HttpServletResponse.class.cast(resp)));
 		chain.doFilter(req, resp);
 	}
 	

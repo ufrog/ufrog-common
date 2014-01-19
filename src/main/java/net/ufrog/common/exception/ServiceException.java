@@ -13,7 +13,7 @@ import net.ufrog.common.utils.Strings.StringSet;
 public class ServiceException extends RuntimeException {
 
 	private static final long serialVersionUID 	= 3212842635807077979L;
-	private static final String DEFAULT_KEY		= "app.exception";
+	private static final String EX_DEFAULT		= "exception.default";
 	
 	/** 代码 */
 	private String code;
@@ -90,10 +90,7 @@ public class ServiceException extends RuntimeException {
 	 * @see #key
 	 */
 	public String getKey() {
-		if (key == null) {
-			key = DEFAULT_KEY;
-		}
-		return key;
+		return Strings.empty(key, EX_DEFAULT);
 	}
 
 	/* (non-Javadoc)

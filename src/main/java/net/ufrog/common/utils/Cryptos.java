@@ -7,9 +7,8 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 import net.ufrog.common.Logger;
-import net.ufrog.common.Property;
+import net.ufrog.common.app.App;
 import net.ufrog.common.exception.ServiceException;
-import net.ufrog.common.utils.Strings.StringSet;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -22,6 +21,8 @@ import org.apache.commons.codec.binary.Base64;
  */
 public abstract class Cryptos {
 
+	private static final String CONF_SECRET 	= "app.secret";
+	
 	/**
 	 * 散列字符串
 	 * 
@@ -46,17 +47,12 @@ public abstract class Cryptos {
 	 * @return
 	 */
 	public static String hex(byte[] bytes) {
-		// 初始化
 		String hex = "0123456789abcdef";
 		StringBuffer out = Strings.buffer(bytes.length);
-		
-		// 循环处理字节
 		for (byte b: bytes) {
 			out.append(hex.charAt(b >>> 4 & 0x0F));
 			out.append(hex.charAt(b & 0x0F));
 		}
-		
-		// 返回结果
 		return out.toString();
 	}
 	
@@ -78,7 +74,7 @@ public abstract class Cryptos {
 	 * @return
 	 */
 	public static String encrypt(String str) {
-		return encrypt(str, Property.getValue("app.secret").substring(0, 16));
+		return encrypt(str, App.config(CONF_SECRET).substring(0, 16));
 	}
 	
 	/**
@@ -108,7 +104,7 @@ public abstract class Cryptos {
 	 * @return
 	 */
 	public static String decrypt(String str) {
-		return decrypt(str, Property.getValue("app.secret").substring(0, 16));
+		return decrypt(str, App.config(CONF_SECRET).substring(0, 16));
 	}
 	
 	/**
@@ -129,13 +125,6 @@ public abstract class Cryptos {
 			Logger.error(e.getMessage(), e);
 			throw new ServiceException("can not decrypt '" + str + "'");
 		}
-	}
-	
-	/**
-	 * @param args
-	 */
-	public static void main(String... args) {
-		System.out.println(Strings.random(64, StringSet.NUMERIC, StringSet.LOWER_ALPHABET, StringSet.UPPER_ALPHABET));
 	}
 	
 	/**

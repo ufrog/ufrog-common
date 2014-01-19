@@ -1,5 +1,7 @@
 package net.ufrog.common;
 
+import net.ufrog.common.app.App;
+
 import org.slf4j.LoggerFactory;
 
 /**
@@ -11,9 +13,11 @@ import org.slf4j.LoggerFactory;
  */
 public class Logger {
 
-	protected static org.slf4j.Logger logger = LoggerFactory.getLogger(Property.getValue("app.logger.name", "app"));
+	private static final String CONF_NAME	= App.config("app.logger.name", "app");
+	private static final String CONF_CALLER	= App.config("app.logger.caller", "false");
 	
-	protected static Boolean caller = Boolean.FALSE;
+	private static org.slf4j.Logger logger 	= LoggerFactory.getLogger(CONF_NAME);
+	private static Boolean caller 			= Boolean.FALSE;
 	
 	/**
 	 * @return
@@ -192,7 +196,7 @@ public class Logger {
 	 * @return
 	 */
 	public static org.slf4j.Logger getLogger() {
-		if (caller == null) caller = Boolean.valueOf(Property.getValue("app.logger.caller", "false"));
+		if (caller == null) caller = Boolean.valueOf(CONF_CALLER);
 		return getLogger(caller);
 	}
 }

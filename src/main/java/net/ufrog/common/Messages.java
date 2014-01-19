@@ -1,11 +1,11 @@
 package net.ufrog.common;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.StringTokenizer;
+
+import net.ufrog.common.app.App;
+import net.ufrog.common.utils.Strings;
 
 /**
  * 消息
@@ -16,9 +16,7 @@ import java.util.StringTokenizer;
  */
 public class Messages {
 
-	protected static final String DEFAULT_BASENAME = "messages";
-	
-	protected static final String baseName = Property.getValue("app.i18n.basename", DEFAULT_BASENAME);
+	private static final String CONF_BASENAME = App.config("app.i18n.basename", "messages");
 	
 	/**
 	 * 读取资源包
@@ -27,10 +25,8 @@ public class Messages {
 	 * @return
 	 */
 	public static ResourceBundle getBundle(Locale locale) {
-		if (locale == null) {
-			locale = Locale.getDefault();
-		}
-		return ResourceBundle.getBundle(baseName, locale);
+		if (locale == null) locale = Locale.getDefault();
+		return ResourceBundle.getBundle(CONF_BASENAME, locale);
 	}
 	
 	/**
@@ -78,24 +74,9 @@ public class Messages {
 	 * @return
 	 */
 	public static Locale parseLocaleString(String locale) {
-		String parts[] = toArray(locale);
-		String language = (parts.length > 0 ? parts[0] : "");
-		String country = (parts.length > 1 ? parts[1] : "");
-		return (language.length() > 0 ? new Locale(language, country) : null);
-	}
-	
-	/**
-	 * 转换成数组
-	 * 
-	 * @param locale
-	 * @return
-	 */
-	protected static String[] toArray(String locale) {
-		StringTokenizer st = new StringTokenizer(locale, "_ ");
-		List<String> tokens = new ArrayList<String>(st.countTokens());
-		while (st.hasMoreElements()) {
-			tokens.add(st.nextToken());
-		}
-		return tokens.toArray(new String[tokens.size()]);
+		String parts[] = locale.split("_");
+		String language = (parts.length > 0) ? parts[0] : "";
+		String country = (parts.length > 1) ? parts[1] : "";
+		return (!Strings.empty(language) ? new Locale(language, country) : null);
 	}
 }

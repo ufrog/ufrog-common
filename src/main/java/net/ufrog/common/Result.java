@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.ufrog.common.utils.Strings;
+
 /**
  * 结果
  * 
@@ -24,11 +26,42 @@ public class Result<T extends Serializable> implements Serializable {
 	/** 数据 */
 	private T data;
 	
-	/**
-	 * 构造函数
-	 */
+	/** 构造函数 */
 	public Result() {
 		messages = new LinkedList<String>();
+	}
+	
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 */
+	public Result(Type type) {
+		this();
+		this.type = type;
+	}
+	
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * @param message
+	 */
+	public Result(Type type, String message) {
+		this(type);
+		addMessage(message);
+	}
+	
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * @param message
+	 * @param data
+	 */
+	public Result(Type type, String message, T data) {
+		this(type, message);
+		this.data = data;
 	}
 	
 	/**
@@ -104,8 +137,8 @@ public class Result<T extends Serializable> implements Serializable {
 	 * @param args
 	 * @return
 	 */
-	public Result<T> addMessage(String message, Object... args) {
-		this.messages.add(Context.current().getMessage(message, args));
+	public Result<T> addMessage(String message) {
+		if (!Strings.empty(message)) this.messages.add(message);
 		return this;
 	}
 	
@@ -117,8 +150,8 @@ public class Result<T extends Serializable> implements Serializable {
 	 * @param args
 	 * @return
 	 */
-	public Result<T> addMessage(int index, String message, Object... args) {
-		this.messages.add(index, Context.current().getMessage(message, args));
+	public Result<T> addMessage(int index, String message) {
+		if (!Strings.empty(message)) this.messages.add(index, message);
 		return this;
 	}
 	
@@ -140,18 +173,6 @@ public class Result<T extends Serializable> implements Serializable {
 	public Result<T> setData(T data) {
 		this.data = data;
 		return this;
-	}
-	
-	/**
-	 * 创建实例
-	 * 
-	 * @param type
-	 * @param message
-	 * @param data
-	 * @return
-	 */
-	public static <T extends Serializable> Result<T> create(Type type, String message, T data) {
-		return new Result<T>().setType(type).addMessage(message).setData(data);
 	}
 	
 	/**

@@ -4,16 +4,15 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.ufrog.common.Logger;
-import net.ufrog.common.Property;
+import net.ufrog.common.app.App;
+import net.ufrog.common.cache.Caches;
 
 /**
- * 日期工具
+ * 日历工具
  * 
  * @author ultrafrog
  * @version 1.0, 2011-12-19
@@ -21,55 +20,30 @@ import net.ufrog.common.Property;
  */
 public abstract class Calendars {
 
-	private static final String DEFAULT_PATTERN_DATE 		= "yyyy-MM-dd";
-	private static final String DEFAULT_PATTERN_TIME		= "HH:mm:ss";
-	private static final String DEFAULT_PATTERN_DATETIME	= "yyyy-MM-dd HH:mm:ss";
+	private static final String CACHE_PREFIX		= "net.ufrog.common.cache.data.format.";
 	
-	private static final Pattern PARSE_DAYS 	= Pattern.compile("^([0-9]+)d$");
-	private static final Pattern PARSE_HOURS 	= Pattern.compile("^([0-9]+)h$");
-	private static final Pattern PARSE_MINUTES 	= Pattern.compile("^([0-9]+)mi?n$");
-	private static final Pattern PARSE_SECONDS 	= Pattern.compile("^([0-9]+)s$");
+	private static final String PATTERN_DATE 		= App.config("app.format.data", "yyyy-MM-dd");
+	private static final String PATTERN_TIME		= App.config("app.format.time", "HH:mm:ss");
+	private static final String PATTERN_DATETIME	= App.config("app.format.datetime", "yyyy-MM-dd HH:mm:ss");
 	
-	private static Map<String, DateFormat> dateFormatMap = new HashMap<String, DateFormat>();
+	private static final Pattern PARSE_DAYS 		= Pattern.compile("^([0-9]+)d$");
+	private static final Pattern PARSE_HOURS 		= Pattern.compile("^([0-9]+)h$");
+	private static final Pattern PARSE_MINUTES 		= Pattern.compile("^([0-9]+)mi?n$");
+	private static final Pattern PARSE_SECONDS 		= Pattern.compile("^([0-9]+)s$");
 	
 	/**
-	 * 读取日期格式器
+	 * 读取格式器
 	 * 
 	 * @param pattern
 	 * @return
 	 */
-	public static DateFormat getDateFormat(String pattern) {
-		if (!dateFormatMap.containsKey(pattern)) {
-			dateFormatMap.put(pattern, new SimpleDateFormat(pattern));
+	public static DateFormat getFormat(String pattern) {
+		DateFormat format = Caches.get(CACHE_PREFIX + pattern, DateFormat.class);
+		if (format == null) {
+			format = new SimpleDateFormat(pattern);
+			Caches.add(CACHE_PREFIX + pattern, format);
 		}
-		return dateFormatMap.get(pattern);
-	}
-	
-	/**
-	 * 读取默认日期模式
-	 * 
-	 * @return
-	 */
-	public static String getDatePattern() {
-		return Property.getValue("app.format.date", DEFAULT_PATTERN_DATE);
-	}
-	
-	/**
-	 * 读取默认时间模式
-	 * 
-	 * @return
-	 */
-	public static String getTimePattern() {
-		return Property.getValue("app.format.time", DEFAULT_PATTERN_TIME);
-	}
-	
-	/**
-	 * 读取默认日期时间模式
-	 * 
-	 * @return
-	 */
-	public static String getDatetimePattern() {
-		return Property.getValue("app.format.datetime", DEFAULT_PATTERN_DATETIME);
+		return format;
 	}
 	
 	/**
@@ -80,7 +54,7 @@ public abstract class Calendars {
 	 * @return
 	 */
 	public static String format(String pattern, Date date) {
-		return getDateFormat(pattern).format(date);
+		return getFormat(pattern).format(date);
 	}
 	
 	/**
@@ -102,7 +76,7 @@ public abstract class Calendars {
 	 * @throws ParseException
 	 */
 	public static Date parse(String pattern, String source) throws ParseException {
-		return getDateFormat(pattern).parse(source);
+		return getFormat(pattern).parse(source);
 	}
 	
 	/**
@@ -138,17 +112,17 @@ public abstract class Calendars {
 	}
 	
 	/**
-	 * 以默认格式格式化日期
+	 * 格式化日期
 	 * 
 	 * @param date
 	 * @return
 	 */
 	public static String date(Date date) {
-		return format(getDatePattern(), date);
+		return format(PATTERN_DATE, date);
 	}
 	
 	/**
-	 * 以默认格式格式化当前日期
+	 * 格式化当前日期
 	 * 
 	 * @return
 	 */
@@ -157,17 +131,17 @@ public abstract class Calendars {
 	}
 	
 	/**
-	 * 以默认格式格式化时间
+	 * 格式化时间
 	 * 
 	 * @param date
 	 * @return
 	 */
 	public static String time(Date date) {
-		return format(getTimePattern(), date);
+		return format(PATTERN_TIME, date);
 	}
 	
 	/**
-	 * 以默认格式格式化当前时间
+	 * 格式化当前时间
 	 * 
 	 * @return
 	 */
@@ -176,17 +150,17 @@ public abstract class Calendars {
 	}
 	
 	/**
-	 * 以默认格式格式化日期时间
+	 * 格式化日期时间
 	 * 
 	 * @param date
 	 * @return
 	 */
 	public static String datetime(Date date) {
-		return format(getDatetimePattern(), date);
+		return format(PATTERN_DATETIME, date);
 	}
 	
 	/**
-	 * 以默认格式格式化当前日期时间
+	 * 格式化当前日期时间
 	 * 
 	 * @return
 	 */
@@ -195,36 +169,36 @@ public abstract class Calendars {
 	}
 	
 	/**
-	 * 解析默认日期字符串
+	 * 解析日期
 	 * 
 	 * @param source
 	 * @return
 	 * @throws ParseException 
 	 */
 	public static Date parseDate(String source) throws ParseException {
-		return parse(getDatePattern(), source);
+		return parse(PATTERN_DATE, source);
 	}
 	
 	/**
-	 * 解析默认时间字符串
+	 * 解析时间
 	 * 
 	 * @param source
 	 * @return
 	 * @throws ParseException 
 	 */
 	public static Date parseTime(String source) throws ParseException {
-		return parse(getTimePattern(), source);
+		return parse(PATTERN_TIME, source);
 	}
 	
 	/**
-	 * 解析默认日期时间字符串
+	 * 解析日期时间
 	 * 
 	 * @param source
 	 * @return
 	 * @throws ParseException
 	 */
 	public static Date parseDatetime(String source) throws ParseException {
-		return parse(getDatetimePattern(), source);
+		return parse(PATTERN_DATETIME, source);
 	}
 	
 	/**

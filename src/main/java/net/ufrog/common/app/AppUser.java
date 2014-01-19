@@ -6,7 +6,7 @@ import java.io.Serializable;
  * 应用用户
  *
  * @author ultrafrog
- * @version 1.0, 2013-10-1
+ * @version 1.0, 2013-10-01
  * @since 1.0
  */
 public class AppUser implements Serializable {
@@ -22,6 +22,22 @@ public class AppUser implements Serializable {
 	/** 名称 */
 	private String name;
 
+	/** 构造函数 */
+	public AppUser() {}
+	
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * @param account
+	 * @param name
+	 */
+	public AppUser(String id, String account, String name) {
+		this.id = id;
+		this.account = account;
+		this.name = name;
+	}
+	
 	/**
 	 * 读取代码
 	 * 
