@@ -7,6 +7,9 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
+	<name>ufrog-common</name>
+	<url>http://common.ufrog.net</url>
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.sourceVersion>1.6</project.build.sourceVersion>

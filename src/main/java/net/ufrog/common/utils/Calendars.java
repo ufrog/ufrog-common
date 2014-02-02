@@ -20,7 +20,7 @@ import net.ufrog.common.cache.Caches;
  */
 public abstract class Calendars {
 
-	private static final String CACHE_PREFIX		= "net.ufrog.common.cache.data.format.";
+	private static final String CACHE_PREFIX		= "net.ufrog.common.cache.calendars.format.";
 	
 	private static final String PATTERN_DATE 		= App.config("app.format.data", "yyyy-MM-dd");
 	private static final String PATTERN_TIME		= App.config("app.format.time", "HH:mm:ss");
