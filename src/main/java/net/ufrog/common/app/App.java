@@ -2,6 +2,7 @@ package net.ufrog.common.app;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import net.ufrog.common.exception.NotSignInException;
@@ -146,5 +147,15 @@ public abstract class App {
 	 */
 	public static String config(String key, String defaultValue) {
 		return Strings.empty(config(key), defaultValue);
+	}
+	
+	/**
+	 * 设置配置
+	 * 
+	 * @param values
+	 */
+	public static void config(Map<String, String> values) {
+		if (properties == null) config("0");
+		properties.putAll(values);
 	}
 }
