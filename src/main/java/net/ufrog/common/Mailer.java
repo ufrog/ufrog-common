@@ -196,13 +196,15 @@ public class Mailer {
 	/**
 	 * 发送纯文本邮件
 	 * 
-	 * @param address
 	 * @param subject
 	 * @param text
+	 * @param address
+	 * @param addresses
 	 */
-	public static void sendText(String address, String subject, String text) {
+	public static void sendText(String subject, String text, String address, String... addresses) {
 		Mailer mailer = new Mailer();
 		mailer.addTo(address);
+		for (String addr: addresses) mailer.addTo(addr);
 		mailer.setSubject(subject);
 		mailer.setText(text);
 		mailer.send();
@@ -211,13 +213,15 @@ public class Mailer {
 	/**
 	 * 发送超文本邮件
 	 * 
-	 * @param address
 	 * @param subject
 	 * @param html
+	 * @param address
+	 * @param addresses
 	 */
-	public static void sendHtml(String address, String subject, String html) {
+	public static void sendHtml(String subject, String html, String address, String... addresses) {
 		Mailer mailer = new Mailer();
 		mailer.addTo(address);
+		for (String addr: addresses) mailer.addTo(addr);
 		mailer.setSubject(subject);
 		mailer.setHtml(html);
 		mailer.send();

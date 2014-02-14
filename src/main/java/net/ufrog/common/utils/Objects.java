@@ -1,6 +1,8 @@
 package net.ufrog.common.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,6 +23,29 @@ public abstract class Objects {
 	 */
 	public static <T> T cast(Object obj, Class<T> clazz) {
 		return clazz.cast(obj);
+	}
+	
+	/**
+	 * 判断对象是否相同
+	 * 
+	 * @param one
+	 * @param another
+	 * @return
+	 */
+	public static boolean equals(Object one, Object another) {
+		return (one == another || (one != null && one.equals(another)));
+	}
+	
+	/**
+	 * 生成列表
+	 * 
+	 * @param ts
+	 * @return
+	 */
+	public static <T> List<T> list(T... ts) {
+		List<T> list = new ArrayList<T>(ts.length);
+		for (T t: ts) list.add(t);
+		return list;
 	}
 	
 	/**
