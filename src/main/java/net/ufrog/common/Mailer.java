@@ -198,12 +198,10 @@ public class Mailer {
 	 * 
 	 * @param subject
 	 * @param text
-	 * @param address
 	 * @param addresses
 	 */
-	public static void sendText(String subject, String text, String address, String... addresses) {
+	public static void sendText(String subject, String text, String... addresses) {
 		Mailer mailer = new Mailer();
-		mailer.addTo(address);
 		for (String addr: addresses) mailer.addTo(addr);
 		mailer.setSubject(subject);
 		mailer.setText(text);
@@ -215,12 +213,10 @@ public class Mailer {
 	 * 
 	 * @param subject
 	 * @param html
-	 * @param address
 	 * @param addresses
 	 */
-	public static void sendHtml(String subject, String html, String address, String... addresses) {
+	public static void sendHtml(String subject, String html, String... addresses) {
 		Mailer mailer = new Mailer();
-		mailer.addTo(address);
 		for (String addr: addresses) mailer.addTo(addr);
 		mailer.setSubject(subject);
 		mailer.setHtml(html);
