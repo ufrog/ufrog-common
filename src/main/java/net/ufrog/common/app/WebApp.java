@@ -30,6 +30,7 @@ public class WebApp extends App {
 	private static final String CONF_PATH_STYLESHEET	= "app.stylesheet";
 	private static final String CONF_PATH_THEME			= "app.theme";
 	
+	private static String tempPath;
 	private static String contextPath;
 	private static String resourcePath;
 	private static String imagePath;
@@ -114,6 +115,15 @@ public class WebApp extends App {
 	}
 	
 	/**
+	 * 读取临时路径
+	 * 
+	 * @return
+	 */
+	public String getTempPath() {
+		return tempPath;
+	}
+	
+	/**
 	 * 读取应用路径
 	 * 
 	 * @return
@@ -173,6 +183,7 @@ public class WebApp extends App {
 	 * @param context
 	 */
 	public static void initialize(ServletContext context) {
+		tempPath = String.valueOf(context.getAttribute("javax.servlet.context.tempdir"));
 		contextPath = context.getContextPath();
 		resourcePath = config(CONF_PATH_RESOURCE, contextPath + "/resources");
 		imagePath = config(CONF_PATH_IMAGE, contextPath + "/resources/images");
@@ -180,6 +191,7 @@ public class WebApp extends App {
 		stylesheetPath = config(CONF_PATH_STYLESHEET, contextPath + "/resources/stylesheets");
 		themePath = config(CONF_PATH_THEME, contextPath + "/theme/default");
 		
+		Logger.info("initialize temp path: %s", tempPath);
 		Logger.info("initialize context path: %s", contextPath);
 		Logger.info("initialize resource path: %s", resourcePath);
 		Logger.info("initialize image path: %s", imagePath);
