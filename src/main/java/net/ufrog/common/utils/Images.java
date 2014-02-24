@@ -219,6 +219,75 @@ public abstract class Images {
 	 * @param height
 	 */
 	public static void crop(InputStream input, String mimeType, File to, Integer x, Integer y, Integer width, Integer height) {
-		
+		try {
+			// 初始化
+			BufferedImage source = ImageIO.read(input);
+			BufferedImage dest = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+			
+			// 生成新图片
+			Image cropped = source.getSubimage(x, y, width, height);
+			Graphics graphics = dest.getGraphics();
+			graphics.setColor(Color.WHITE);
+			graphics.fillRect(0, 0, width, height);
+			graphics.drawImage(cropped, 0, 0, null);
+			
+			ImageWriter writer = ImageIO.getImageWritersByMIMEType(mimeType).next();
+			ImageWriteParam params = writer.getDefaultWriteParam();
+			FileImageOutputStream fios = new FileImageOutputStream(to);
+			writer.setOutput(fios);
+			
+			IIOImage img = new IIOImage(dest, null, null);
+			writer.write(null, img, params);
+			fios.flush();
+			fios.close();
+		} catch (IOException e) {
+			throw new ServiceException("cannot crop image.", e);
+		}
+	}
+	
+	/**
+	 * 裁剪图片
+	 * 
+	 * @param image
+	 * @param to
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 */
+	public static void crop(File image, File to, Integer x, Integer y, Integer width, Integer height) {
+		FileInputStream input = null;
+		try {
+			input = new FileInputStream(image);
+			crop(input, Files.getMimeType(image), to, x, y, width, height);
+		} catch (FileNotFoundException e) {
+			throw new ServiceException("cannot crop image.", e);
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					throw new ServiceException("cannot close input stream.", e);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 裁剪图片
+	 * 
+	 * @param input
+	 * @param mimeType
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 */
+	public static byte[] crop(InputStream input, String mimeType, Integer x, Integer y, Integer width, Integer height) {
+		File to = new File(App.current(WebApp.class).getTempPath() + "/" + Codecs.uuid());
+		crop(input, mimeType, to, x, y, width, height);
+		byte[] bytes = Files.toBytes(to);
+		to.delete();
+		return bytes;
 	}
 }
