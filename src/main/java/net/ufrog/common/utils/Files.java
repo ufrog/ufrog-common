@@ -1,6 +1,8 @@
 package net.ufrog.common.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -100,5 +102,33 @@ public abstract class Files {
 	 */
 	public static String getMimeType(File file) {
 		return getMimeType(file.getName());
+	}
+	
+	/**
+	 * 转换成字节数组
+	 * 
+	 * @param file
+	 * @return
+	 */
+	public static byte[] toBytes(File file) {
+		FileInputStream input = null;
+		try {
+			input = new FileInputStream(file);
+			byte[] bytes = new byte[Long.valueOf(file.length()).intValue()];
+			input.read(bytes);
+			return bytes;
+		} catch (FileNotFoundException e) {
+			throw new ServiceException("cannot to bytes.", e);
+		} catch (IOException e) {
+			throw new ServiceException("cannot to bytes.", e);
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					throw new ServiceException("cannot close input stream.", e);
+				}
+			}
+		}
 	}
 }
