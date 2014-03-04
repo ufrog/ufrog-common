@@ -12,14 +12,14 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * 配置指令<br>
- * 读取配置信息
+ * 消息指令<br>
+ * 读取国际化消息
  * 
  * @author ultrafrog
- * @version 1.0, 2014-02-28
+ * @version 1.0, 2014-03-03
  * @since 1.0
  */
-public class ConfigDirective implements TemplateDirectiveModel {
+public class MessageDirective implements TemplateDirectiveModel {
 
 	private static final String PARAM_KEY	= "key";
 	
@@ -30,6 +30,6 @@ public class ConfigDirective implements TemplateDirectiveModel {
 	@Override
 	public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
 		if (!params.containsKey(PARAM_KEY)) throw new TemplateModelException("key is necessary!");
-		env.getOut().write(App.config(params.get(PARAM_KEY).toString(), ""));
+		env.getOut().write(App.message(params.get(PARAM_KEY).toString()));
 	}
 }
