@@ -191,6 +191,9 @@ public class Mailer {
 		} catch (MessagingException e) {
 			throw new ServiceException("cannot set address '" + from + "'.", "exception.mail.from", e);
 		}
+		
+		// 打印日志
+		Logger.info("initialize mail host: %s, port: %s, username: %s, from: %s", host, port, username, from);
 	}
 	
 	/**
