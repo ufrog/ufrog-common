@@ -118,7 +118,7 @@ public class Result<T extends Serializable> implements Serializable {
 	 * @return
 	 */
 	public List<String> getMessages() {
-		return this.messages;
+		return messages;
 	}
 	
 	/**
@@ -127,7 +127,7 @@ public class Result<T extends Serializable> implements Serializable {
 	 * @return
 	 */
 	public String getFirstMessage() {
-		return this.messages.get(0);
+		return messages.size() > 0 ? messages.get(0) : null;
 	}
 	
 	/**
