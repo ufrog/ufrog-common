@@ -7,6 +7,7 @@ import net.ufrog.common.Logger;
 import net.ufrog.common.app.App;
 import net.ufrog.common.exception.ServiceException;
 import net.ufrog.common.utils.Calendars;
+import net.ufrog.common.utils.Strings;
 
 /**
  * 缓存工具
@@ -30,7 +31,7 @@ public class Caches {
 	 */
 	public static void add(String key, Object value, int expiration) {
 		checkSerializable(value);
-		Logger.info("add '%s - %s' into cache for '%s' seconds!", key, value, expiration);
+		Logger.info("add '%s - %s' into cache for '%s' seconds!", key, Strings.toString(value), expiration);
 		getImpl().add(key, value, expiration);
 	}
 
@@ -65,11 +66,11 @@ public class Caches {
 	 */
 	public static boolean safeAdd(String key, Object value, int expiration) {
 		checkSerializable(value);
-		Logger.info("add '%s - %s' into cache for '%s' seconds!", key, value, expiration);
+		Logger.info("add '%s - %s' into cache for '%s' seconds!", key, Strings.toString(value), expiration);
 		if (getImpl().safeAdd(key, value, expiration)) {
 			return true;
 		}
-		Logger.warn("add '%s - %s' into cache failure!", key, value);
+		Logger.warn("add '%s - %s' into cache failure!", key, Strings.toString(value));
 		return false;
 	}
 
@@ -105,7 +106,7 @@ public class Caches {
 	 */
 	public static void set(String key, Object value, int expiration) {
 		checkSerializable(value);
-		Logger.info("set '%s - %s' into cache for '%s' seconds!", key, value, expiration);
+		Logger.info("set '%s - %s' into cache for '%s' seconds!", key, Strings.toString(value), expiration);
 		getImpl().set(key, value, expiration);
 	}
 	
@@ -140,11 +141,11 @@ public class Caches {
 	 */
 	public static boolean safeSet(String key, Object value, int expiration) {
 		checkSerializable(value);
-		Logger.info("set '%s - %s' into cache for '%s' seconds!", key, value, expiration);
+		Logger.info("set '%s - %s' into cache for '%s' seconds!", key, Strings.toString(value), expiration);
 		if (getImpl().safeSet(key, value, expiration)) {
 			return true;
 		}
-		Logger.warn("set '%s - %s' into cache failure!", key, value);
+		Logger.warn("set '%s - %s' into cache failure!", key, Strings.toString(value));
 		return false;
 	}
 	
@@ -180,7 +181,7 @@ public class Caches {
 	 */
 	public static void replace(String key, Object value, int expiration) {
 		checkSerializable(value);
-		Logger.info("replace '%s - %s' into cache for '%s' seconds!", key, value, expiration);
+		Logger.info("replace '%s - %s' into cache for '%s' seconds!", key, Strings.toString(value), expiration);
 		getImpl().replace(key, value, expiration);
 	}
 	
@@ -215,11 +216,11 @@ public class Caches {
 	 */
 	public static boolean safeReplace(String key, Object value, int expiration) {
 		checkSerializable(value);
-		Logger.info("replace '%s - %s' into cache for '%s' seconds!", key, value, expiration);
+		Logger.info("replace '%s - %s' into cache for '%s' seconds!", key, Strings.toString(value), expiration);
 		if (getImpl().safeReplace(key, value, expiration)) {
 			return true;
 		}
-		Logger.warn("replace '%s - %s' into cache failure!", key, value);
+		Logger.warn("replace '%s - %s' into cache failure!", key, Strings.toString(value));
 		return false;
 	}
 	
@@ -341,7 +342,7 @@ public class Caches {
 	 */
 	protected static void checkSerializable(Object value) {
 		if (value != null && !(value instanceof Serializable)) {
-			throw new ServiceException(String.format("the object '%s' is not serialized.", value), "exception.serialize");
+			throw new ServiceException(String.format("the object '%s' is not serialized.", Strings.toString(value)), "exception.serialize");
 		}
 	}
 	

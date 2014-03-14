@@ -27,9 +27,11 @@ public class EhCacheImpl implements Cache {
 	protected EhCacheImpl() {
 		synchronized (CACHE_NAME) {
 			cacheManager = CacheManager.create();
-			if (!cacheManager.cacheExists(CACHE_NAME)) cacheManager.addCache(CACHE_NAME);
+			if (!cacheManager.cacheExists(CACHE_NAME)) {
+				cacheManager.addCache(CACHE_NAME);
+				Logger.info("initialize ehcache '%s' completed!", CACHE_NAME);
+			}
 			cache = cacheManager.getCache(CACHE_NAME);
-			Logger.info("initialize ehcache '%s' completed!", CACHE_NAME);
 		}
 	}
 	

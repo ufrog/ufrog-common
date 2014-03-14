@@ -3,6 +3,7 @@ package net.ufrog.common.utils;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -224,6 +225,29 @@ public abstract class Strings {
 		StringBuilder builder = builder();
 		for (String s: strs) builder.append(s);
 		return builder;
+	}
+	
+	/**
+	 * 转换成字符串
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static String toString(Object obj) {
+		// 根据类型进行判断处理
+		if (obj instanceof String) {
+			String str = String.class.cast(obj);
+			if (str.length() > 100) return str.length() + " chars string.";
+		} else if (obj instanceof List) {
+			List<?> list = List.class.cast(obj);
+			if (list.size() > 10) return list.size() + " size list.";
+		} else if (obj instanceof Map) {
+			Map<?, ?> map = Map.class.cast(obj);
+			if (map.size() > 5) return map.size() + " size map.";
+		}
+		
+		// 返回默认结果
+		return String.valueOf(obj);
 	}
 	
 	/**

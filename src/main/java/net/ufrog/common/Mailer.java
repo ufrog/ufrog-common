@@ -2,10 +2,12 @@ package net.ufrog.common;
 
 import java.util.Date;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
-import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
@@ -36,6 +38,8 @@ public class Mailer {
 	private static final String PROP_SMTP_USERNAME	= "mail.smtp.username";
 	private static final String PROP_SMTP_PASSWORD	= "mail.smtp.password";
 	private static final String PROP_FROM			= "mail.from";
+	
+	private static ExecutorService executorService = Executors.newCachedThreadPool();
 	
 	/** 消息 */
 	private Message message;
@@ -143,7 +147,7 @@ public class Mailer {
 		try {
 			Multipart multipart = new MimeMultipart();
 			BodyPart html = new MimeBodyPart();
-			html.setContent("text", "text/html charset=utf-8");
+			html.setContent(text, "text/html; charset=utf-8");
 			multipart.addBodyPart(html);
 			message.setContent(multipart);
 		} catch (MessagingException e) {
@@ -153,12 +157,7 @@ public class Mailer {
 	
 	/** 发送邮件 */
 	public void send() {
-		try {
-			message.setSentDate(new Date());
-			Transport.send(message);
-		} catch (MessagingException e) {
-			throw new ServiceException("cannot send mail.", "exception.mail.send", e);
-		}
+		executorService.execute(new SendTask());
 	}
 	
 	/**
@@ -193,7 +192,7 @@ public class Mailer {
 		}
 		
 		// 打印日志
-		Logger.info("initialize mail host: %s, port: %s, username: %s, from: %s", host, port, username, from);
+		Logger.debug("initialize mail host: %s, port: %s, username: %s, from: %s", host, port, username, from);
 	}
 	
 	/**
@@ -233,16 +232,13 @@ public class Mailer {
 	 * @version 1.0, 2014-02-07
 	 * @since 1.0
 	 */
-	public static class Authenticator extends javax.mail.Authenticator {
+	protected class Authenticator extends javax.mail.Authenticator {
 		
 		/** 用户名 */
 		private String username;
 		
 		/** 密码 */
 		private String password;
-		
-		/** 构造函数 */
-		public Authenticator() {}
 		
 		/**
 		 * 构造函数
@@ -262,23 +258,29 @@ public class Mailer {
 		protected PasswordAuthentication getPasswordAuthentication() {
 			return new PasswordAuthentication(username, password);
 		}
+	}
+	
+	/**
+	 * 发送任务
+	 * 
+	 * @author ultrafrog
+	 * @version 1.0, 2014-03-13
+	 * @since 1.0
+	 */
+	protected class SendTask implements Runnable {
 		
-		/**
-		 * 设置用户名
-		 * 
-		 * @param username
+		/* (non-Javadoc)
+		 * @see java.lang.Runnable#run()
 		 */
-		public void setUsername(String username) {
-			this.username = username;
-		}
-		
-		/**
-		 * 设置密码
-		 * 
-		 * @param password
-		 */
-		public void setPassword(String password) {
-			this.password = password;
+		@Override
+		public void run() {
+			try {
+				message.setSentDate(new Date());
+				Transport.send(message);
+				if (Logger.isInfoEnabled()) Logger.info("send mail '%s' to '%s' success.", message.getSubject(), InternetAddress.toString(message.getAllRecipients()));
+			} catch (MessagingException e) {
+				throw new ServiceException(e.getMessage(), e);
+			}
 		}
 	}
 }

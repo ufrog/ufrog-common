@@ -178,6 +178,17 @@ public class WebApp extends App {
 	}
 	
 	/**
+	 * 读取当前地址
+	 * 
+	 * @return
+	 */
+	public String getHome() {
+		String url = request.getRequestURL().toString();
+		Integer position = url.indexOf(contextPath);
+		return url.substring(0, position + contextPath.length());
+	}
+	
+	/**
 	 * 初始化
 	 * 
 	 * @param context
