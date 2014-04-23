@@ -1,5 +1,7 @@
 package net.ufrog.common.utils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -66,7 +68,8 @@ public abstract class Numbers {
 	 * @return
 	 */
 	public static String currency(Number number) {
-		return format(PATTERN_CURRENCY, number);
+		BigDecimal currency = new BigDecimal(number.doubleValue()).setScale(2, RoundingMode.DOWN);
+		return format(PATTERN_CURRENCY, currency);
 	}
 	
 	/**
@@ -76,6 +79,7 @@ public abstract class Numbers {
 	 * @return
 	 */
 	public static String percent(Number number) {
-		return format(PATTERN_PERCENT, number);
+		BigDecimal percent = new BigDecimal(number.doubleValue()).setScale(4, RoundingMode.DOWN);
+		return format(PATTERN_PERCENT, percent);
 	}
 }
