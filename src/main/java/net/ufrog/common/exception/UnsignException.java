@@ -7,13 +7,13 @@ package net.ufrog.common.exception;
  * @version 0.1, 2014-01-17
  * @since 0.1
  */
-public class NotSignInException extends ServiceException {
+public class UnsignException extends ServiceException {
 
 	private static final long serialVersionUID 	= -3461737837766355183L;
-	private static final String EX_SIGN_IN		= "exception.sign.in";
+	private static final String EX_UNSIGN		= "exception.unsign";
 
 	/** 构造函数 */
-	public NotSignInException() {
-		super("user is not sign in.", EX_SIGN_IN);
+	public UnsignException() {
+		super("user is not sign in.", EX_UNSIGN);
 	}
 }

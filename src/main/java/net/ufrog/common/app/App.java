@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import net.ufrog.common.exception.NotSignInException;
+import net.ufrog.common.exception.UnsignException;
 import net.ufrog.common.exception.ServiceException;
 import net.ufrog.common.utils.Strings;
 
@@ -105,7 +105,7 @@ public abstract class App {
 	 */
 	public static AppUser user() {
 		AppUser user = current().getUser();
-		if (user == null) throw new NotSignInException();
+		if (user == null) throw new UnsignException();
 		return user;
 	}
 	
