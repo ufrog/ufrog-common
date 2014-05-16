@@ -24,11 +24,12 @@ public class WebApp extends App {
 	private static final String SESSION_USER			= "net.ufrog.session.user";
 	private static final String SESSION_TOKEN			= "net.ufrog.session.token";
 	
-	private static final String CONF_PATH_RESOURCE		= "app.resource";
-	private static final String CONF_PATH_IMAGE			= "app.image";
-	private static final String CONF_PATH_JAVASCRIPT	= "app.javascript";
-	private static final String CONF_PATH_STYLESHEET	= "app.stylesheet";
-	private static final String CONF_PATH_THEME			= "app.theme";
+	private static final String CONF_PATH_HOST			= "path.host";
+	private static final String CONF_PATH_RESOURCE		= "path.resource";
+	private static final String CONF_PATH_IMAGE			= "path.image";
+	private static final String CONF_PATH_JAVASCRIPT	= "path.javascript";
+	private static final String CONF_PATH_STYLESHEET	= "path.stylesheet";
+	private static final String CONF_PATH_THEME			= "path.theme";
 	
 	private static String tempPath;
 	private static String contextPath;
@@ -196,11 +197,11 @@ public class WebApp extends App {
 	public static void initialize(ServletContext context) {
 		tempPath = String.valueOf(context.getAttribute("javax.servlet.context.tempdir"));
 		contextPath = context.getContextPath();
-		resourcePath = config(CONF_PATH_RESOURCE, contextPath + "/resources");
-		imagePath = config(CONF_PATH_IMAGE, contextPath + "/resources/images");
-		javascriptPath = config(CONF_PATH_JAVASCRIPT, contextPath + "/resources/javascripts");
-		stylesheetPath = config(CONF_PATH_STYLESHEET, contextPath + "/resources/stylesheets");
-		themePath = config(CONF_PATH_THEME, contextPath + "/theme/default");
+		resourcePath = config(CONF_PATH_HOST, contextPath) + config(CONF_PATH_RESOURCE, "/resources");
+		imagePath = config(CONF_PATH_HOST, contextPath) + config(CONF_PATH_IMAGE, "/resources/images");
+		javascriptPath = config(CONF_PATH_HOST, contextPath) + config(CONF_PATH_JAVASCRIPT, "/resources/javascripts");
+		stylesheetPath = config(CONF_PATH_HOST, contextPath) + config(CONF_PATH_STYLESHEET, "/resources/stylesheets");
+		themePath = config(CONF_PATH_HOST, contextPath) + config(CONF_PATH_THEME, "/theme/default");
 		
 		Logger.info("initialize temp path: %s", tempPath);
 		Logger.info("initialize context path: %s", contextPath);
@@ -208,6 +209,7 @@ public class WebApp extends App {
 		Logger.info("initialize image path: %s", imagePath);
 		Logger.info("initialize javascript path: %s", javascriptPath);
 		Logger.info("initialize stylesheet path: %s", stylesheetPath);
+		Logger.info("initialize theme path: %s", themePath);
 	}
 	
 	/**

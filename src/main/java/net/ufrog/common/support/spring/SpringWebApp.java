@@ -11,6 +11,7 @@ import net.ufrog.common.app.App;
 import net.ufrog.common.app.WebApp;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.util.WebUtils;
@@ -50,7 +51,12 @@ public class SpringWebApp extends WebApp {
 	 */
 	@Override
 	public String getMessage(String key, Object... args) {
-		return String.format(applicationContext.getMessage(key, null, getLocale()), args);
+		try {
+			return String.format(applicationContext.getMessage(key, null, getLocale()), args);
+		} catch (NoSuchMessageException e) {
+			Logger.warn(e.getMessage());
+			return key;
+		}
 	}
 	
 	/**
