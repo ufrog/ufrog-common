@@ -78,6 +78,9 @@ public class WebApp extends App {
 	 */
 	@Override
 	public String getToken() {
+		if (request.getSession().getAttribute(SESSION_TOKEN) == null) {
+			return updateToken();
+		}
 		return String.class.cast(request.getSession().getAttribute(SESSION_TOKEN));
 	}
 	

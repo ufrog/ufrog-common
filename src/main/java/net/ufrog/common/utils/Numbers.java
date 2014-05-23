@@ -68,7 +68,7 @@ public abstract class Numbers {
 	 * @return
 	 */
 	public static String currency(Number number) {
-		BigDecimal currency = new BigDecimal(number.doubleValue()).setScale(2, RoundingMode.DOWN);
+		BigDecimal currency = new BigDecimal(number.toString()).setScale(2, RoundingMode.DOWN);
 		return format(PATTERN_CURRENCY, currency);
 	}
 	
@@ -79,7 +79,7 @@ public abstract class Numbers {
 	 * @return
 	 */
 	public static String percent(Number number) {
-		BigDecimal percent = new BigDecimal(number.doubleValue()).setScale(4, RoundingMode.DOWN);
+		BigDecimal percent = new BigDecimal(number.toString()).setScale(4, RoundingMode.DOWN);
 		return format(PATTERN_PERCENT, percent);
 	}
 }
