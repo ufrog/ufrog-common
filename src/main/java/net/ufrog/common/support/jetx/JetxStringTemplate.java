@@ -5,16 +5,17 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.ufrog.common.Logger;
 import jetbrick.template.JetContext;
-import jetbrick.template.JetEngine;
 import jetbrick.template.JetTemplate;
+import jetbrick.template.web.JetWebEngineLoader;
 
 /**
  * @author ultrafrog
  * @version 1.0, 2014-05-15
  * @since 1.0
  */
-public class StringTemplate {
+public class JetxStringTemplate {
 
 	private static Map<String, JetTemplate> templates = new HashMap<String, JetTemplate>();
 	
@@ -25,7 +26,8 @@ public class StringTemplate {
 	 */
 	public static JetTemplate getTemplate(String key, String source) {
 		if (!templates.containsKey(key)) {
-			templates.put(key, JetEngine.create().createTemplate(source));
+			templates.put(key, JetWebEngineLoader.getJetEngine().createTemplate(source));
+			Logger.info("initialize template '%s'", key);
 		}
 		return templates.get(key);
 	}
