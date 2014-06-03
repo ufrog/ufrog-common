@@ -28,7 +28,7 @@ public class ExceptionFilter implements Filter {
 	 */
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		// TODO Auto-generated method stub
+		Logger.info("exception filter is working...");
 	}
 
 	/* (non-Javadoc)
@@ -61,6 +61,6 @@ public class ExceptionFilter implements Filter {
 	 */
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
+		Logger.info("exception filter has been shutdown.");
 	}
 }
