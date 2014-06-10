@@ -4,13 +4,15 @@ import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import net.ufrog.common.Logger;
 import net.ufrog.common.Messages;
+import net.ufrog.common.cache.Caches;
 import net.ufrog.common.utils.Codecs;
+import net.ufrog.common.utils.Strings;
 
 /**
  * 互联网应用信息
@@ -21,6 +23,7 @@ import net.ufrog.common.utils.Codecs;
  */
 public class WebApp extends App {
 
+	private static final String COOKIE_SESSION_ID		= "net.ufrog.cookie.session.id";
 	private static final String SESSION_USER			= "net.ufrog.session.user";
 	private static final String SESSION_TOKEN			= "net.ufrog.session.token";
 	
@@ -33,6 +36,7 @@ public class WebApp extends App {
 	
 	private static String tempPath;
 	private static String contextPath;
+	private static String homePath;
 	private static String resourcePath;
 	private static String imagePath;
 	private static String javascriptPath;
@@ -40,6 +44,7 @@ public class WebApp extends App {
 	private static String themePath;
 	
 	protected HttpServletRequest request;
+	protected HttpServletResponse response;
 	
 	/**
 	 * 构造函数
@@ -49,6 +54,7 @@ public class WebApp extends App {
 	 */
 	public WebApp(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
+		this.response = response;
 	}
 	
 	/* (non-Javadoc)
@@ -56,7 +62,7 @@ public class WebApp extends App {
 	 */
 	@Override
 	public AppUser getUser() {
-		return AppUser.class.cast(request.getSession().getAttribute(SESSION_USER));
+		return AppUser.class.cast(session(SESSION_USER));
 	}
 	
 	/* (non-Javadoc)
@@ -64,12 +70,7 @@ public class WebApp extends App {
 	 */
 	@Override
 	public AppUser setUser(AppUser user) {
-		if (user == null) {
-			HttpSession session = request.getSession(false);
-			if (session != null) session.removeAttribute(SESSION_USER);
-		} else {
-			request.getSession().setAttribute(SESSION_USER, user);
-		}
+		session(SESSION_USER, user);
 		return user;
 	}
 	
@@ -187,9 +188,86 @@ public class WebApp extends App {
 	 * @return
 	 */
 	public String getHome() {
-		String url = request.getRequestURL().toString();
-		Integer position = url.indexOf(contextPath);
-		return url.substring(0, position + contextPath.length());
+		// 判断地址是否已经生成
+		if (homePath == null) {
+			// 初始化
+			String scheme = request.getScheme();
+			Integer port = request.getServerPort();
+			StringBuilder url = Strings.builder(scheme);
+			
+			// 生成地址
+			url.append("://");
+			url.append(request.getServerName());
+			if (!(port == 80 && Strings.equals("http", scheme)) && !(port == 443 && Strings.equals("https", scheme))) {
+				url.append(":").append(port);
+			}
+			url.append(request.getContextPath());
+			
+			// 地址设置
+			homePath = url.toString();
+		}
+		
+		// 返回结果
+		return homePath;
+	}
+	
+	/**
+	 * @param name
+	 * @param obj
+	 */
+	public void session(String name, Object obj) {
+		// 读取编号
+		String cookieSessionId = getCookieValue(COOKIE_SESSION_ID);
+		if (cookieSessionId == null) {
+			cookieSessionId = Codecs.uuid();
+			Cookie cookie = new Cookie(COOKIE_SESSION_ID, cookieSessionId);
+			cookie.setMaxAge(60 * 60 * 24 * 14);
+			response.addCookie(cookie);
+			Logger.debug("create cookie session id: %s", cookieSessionId);
+		}
+		
+		// 当对象为空时判定为删除相关会话
+		if (obj == null) {
+			Caches.delete(cookieSessionId + "@" + name);
+			return;
+		}
+		
+		// 设置缓存
+		Caches.set(cookieSessionId + "@" + name, obj, App.config("app.session.timeout", "30mn"));
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	public Object session(String name) {
+		// 读取会话编号
+		// 若没有会话编号返回空
+		String cookieSessionId = getCookieValue(COOKIE_SESSION_ID);
+		if (cookieSessionId == null) return null;
+		
+		// 读取缓存
+		// 若缓存不存在则返回空
+		Object obj = Caches.get(cookieSessionId + "@" + name);
+		if (obj == null) return null;
+		
+		// 重置缓存时间并返回结果
+		session(name, obj);
+		return obj;
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+	protected String getCookieValue(String name) {
+		if (request.getCookies() == null) return null;
+		for (Cookie cookie: request.getCookies()) {
+			if (Strings.equals(cookie.getName(), name)) {
+				return cookie.getValue();
+			}
+		}
+		return null;
 	}
 	
 	/**
