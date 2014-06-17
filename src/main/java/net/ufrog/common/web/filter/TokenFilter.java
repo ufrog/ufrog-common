@@ -31,7 +31,7 @@ public class TokenFilter implements Filter {
 	 */
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-		Logger.info("token filter is running...");
+		Logger.info("token filter is working...");
 	}
 	
 	/* (non-Javadoc)
@@ -57,6 +57,6 @@ public class TokenFilter implements Filter {
 	 */
 	@Override
 	public void destroy() {
-		Logger.info("token filter destroyed!");
+		Logger.info("token filter has been destroyed!");
 	}
 }

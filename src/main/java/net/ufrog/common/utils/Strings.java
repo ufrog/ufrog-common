@@ -72,6 +72,18 @@ public abstract class Strings {
 	}
 	
 	/**
+	 * 首字母大写
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static String toTitleCase(String str) {
+		char[] chars = str.toCharArray();
+		chars[0] = Character.toUpperCase(chars[0]);
+		return new String(chars);
+	}
+	
+	/**
 	 * 随机值
 	 * 
 	 * @param length
