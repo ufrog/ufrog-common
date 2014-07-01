@@ -84,6 +84,25 @@ public abstract class Strings {
 	}
 	
 	/**
+	 * 驼峰命名
+	 * 
+	 * @param str
+	 * @param regex
+	 * @return
+	 */
+	public static String toCamelCase(String str, String regex) {
+		StringBuilder name = builder();
+		for (String s: explode(str, regex)) {
+			if (name.length() > 0) {
+				name.append(toTitleCase(s.toLowerCase()));
+			} else {
+				name.append(s.toLowerCase());
+			}
+		}
+		return name.toString();
+	}
+	
+	/**
 	 * 随机值
 	 * 
 	 * @param length
