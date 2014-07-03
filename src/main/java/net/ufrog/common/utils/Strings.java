@@ -72,6 +72,20 @@ public abstract class Strings {
 	}
 	
 	/**
+	 * 判断字符串是否在列表中
+	 * 
+	 * @param str
+	 * @param strs
+	 * @return
+	 */
+	public static boolean in(String str, String... strs) {
+		for (String s: strs) {
+			if (equals(str, s)) return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * 首字母大写
 	 * 
 	 * @param str
