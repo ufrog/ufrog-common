@@ -42,6 +42,7 @@ public abstract class Objects {
 	 * @param ts
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> List<T> list(T... ts) {
 		List<T> list = new ArrayList<T>(ts.length);
 		for (T t: ts) list.add(t);
