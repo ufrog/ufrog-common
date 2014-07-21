@@ -24,6 +24,50 @@ public abstract class Numbers {
 	private static final String PATTERN_PERCENT		= App.config("app.format.percent", "#,##0.00%");
 	
 	/**
+	 * 加
+	 * 
+	 * @param num
+	 * @param another
+	 * @return
+	 */
+	public static BigDecimal add(BigDecimal num, BigDecimal another) {
+		return num.add(another).setScale(2, RoundingMode.DOWN);
+	}
+	
+	/**
+	 * 减
+	 * 
+	 * @param num
+	 * @param another
+	 * @return
+	 */
+	public static BigDecimal subtract(BigDecimal num, BigDecimal another) {
+		return num.subtract(another).setScale(2, RoundingMode.DOWN);
+	}
+	
+	/**
+	 * 乘
+	 * 
+	 * @param num
+	 * @param another
+	 * @return
+	 */
+	public static BigDecimal multiply(BigDecimal num, BigDecimal another) {
+		return num.multiply(another).setScale(2, RoundingMode.DOWN);
+	}
+	
+	/**
+	 * 除
+	 * 
+	 * @param num
+	 * @param another
+	 * @return
+	 */
+	public static BigDecimal divide(BigDecimal num, BigDecimal another) {
+		return num.divide(another, 2, RoundingMode.DOWN);
+	}
+	
+	/**
 	 * 读取格式器
 	 * 
 	 * @param pattern
