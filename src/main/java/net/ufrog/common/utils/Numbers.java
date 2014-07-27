@@ -23,6 +23,9 @@ public abstract class Numbers {
 	private static final String PATTERN_CURRENCY	= App.config("app.format.currency", "#,##0.00");
 	private static final String PATTERN_PERCENT		= App.config("app.format.percent", "#,##0.00%");
 	
+	private static Integer scale					= 2;
+	private static RoundingMode roundingMode 		= RoundingMode.DOWN;
+	
 	/**
 	 * 加
 	 * 
@@ -31,7 +34,7 @@ public abstract class Numbers {
 	 * @return
 	 */
 	public static BigDecimal add(BigDecimal num, BigDecimal another) {
-		return num.add(another).setScale(2, RoundingMode.DOWN);
+		return num.add(another).setScale(scale, roundingMode);
 	}
 	
 	/**
@@ -42,7 +45,7 @@ public abstract class Numbers {
 	 * @return
 	 */
 	public static BigDecimal subtract(BigDecimal num, BigDecimal another) {
-		return num.subtract(another).setScale(2, RoundingMode.DOWN);
+		return num.subtract(another).setScale(scale, roundingMode);
 	}
 	
 	/**
@@ -53,7 +56,7 @@ public abstract class Numbers {
 	 * @return
 	 */
 	public static BigDecimal multiply(BigDecimal num, BigDecimal another) {
-		return num.multiply(another).setScale(2, RoundingMode.DOWN);
+		return num.multiply(another).setScale(scale, roundingMode);
 	}
 	
 	/**
@@ -64,7 +67,7 @@ public abstract class Numbers {
 	 * @return
 	 */
 	public static BigDecimal divide(BigDecimal num, BigDecimal another) {
-		return num.divide(another, 2, RoundingMode.DOWN);
+		return num.divide(another, scale, roundingMode);
 	}
 	
 	/**
