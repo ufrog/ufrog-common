@@ -1,6 +1,5 @@
 package net.ufrog.common.support.jetx;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import net.ufrog.common.utils.Calendars;
@@ -15,47 +14,59 @@ public final class CommonMethods {
 
 	/**
 	 * @param value
+	 * @param pattern
 	 * @return
 	 */
-	public static String currency(Object value) {
-		if (value instanceof Number) {
-			return Numbers.currency(Number.class.cast(value));
-		}
-		return Numbers.currency(new BigDecimal(value.toString()));
+	public static String formatNumber(Number value, String pattern) {
+		return Numbers.format(pattern, value);
 	}
 	
 	/**
 	 * @param value
 	 * @return
 	 */
-	public static String percent(Object value) {
-		if (value instanceof Number) {
-			return Numbers.percent(Number.class.cast(value));
-		}
-		return Numbers.percent(new BigDecimal(value.toString()));
+	public static String currency(Number value) {
+		return Numbers.currency(value);
 	}
 	
 	/**
 	 * @param value
 	 * @return
 	 */
-	public static String date(Object value) {
-		return Calendars.date(Date.class.cast(value));
+	public static String percent(Number value) {
+		return Numbers.percent(value);
+	}
+	
+	/**
+	 * @param value
+	 * @param pattern
+	 * @return
+	 */
+	public static String formatDate(Date value, String pattern) {
+		return Calendars.format(pattern, value);
 	}
 	
 	/**
 	 * @param value
 	 * @return
 	 */
-	public static String time(Object value) {
-		return Calendars.time(Date.class.cast(value));
+	public static String date(Date value) {
+		return Calendars.date(value);
 	}
 	
 	/**
 	 * @param value
 	 * @return
 	 */
-	public static String datetime(Object value) {
-		return Calendars.datetime(Date.class.cast(value));
+	public static String time(Date value) {
+		return Calendars.time(value);
+	}
+	
+	/**
+	 * @param value
+	 * @return
+	 */
+	public static String datetime(Date value) {
+		return Calendars.datetime(value);
 	}
 }

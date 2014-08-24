@@ -5,10 +5,11 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.ufrog.common.Logger;
 import jetbrick.template.JetContext;
 import jetbrick.template.JetTemplate;
 import jetbrick.template.web.JetWebEngineLoader;
+import net.ufrog.common.Logger;
+import net.ufrog.common.exception.ServiceException;
 
 /**
  * @author ultrafrog
@@ -49,6 +50,28 @@ public class JetxStringTemplate {
 	
 	/**
 	 * @param key
+	 * @param source
+	 * @param param
+	 * @return
+	 */
+	public static String render(String key, String source, Object... params) {
+		// 判断参数个数
+		if (params.length % 2 != 0) {
+			throw new ServiceException("params is not pair.");
+		}
+		
+		// 处理参数
+		Map<String, Object> map = new HashMap<>();
+		for (int i = 0; i < params.length; i++) {
+			map.put(String.valueOf(params[i++]), params[i]);
+		}
+		
+		// 处理并返回结果
+		return render(key, source, map);
+	}
+	
+	/**
+	 * @param key
 	 */
 	public static void clear(String key) {
 		templates.remove(key);
@@ -58,8 +81,6 @@ public class JetxStringTemplate {
 	 * @param args
 	 */
 	public static void main(String... args) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("hello", "world");
-		System.out.println(render("test", "${hello}, ${1+2+4}", map));
+		System.out.println(render("test", "${hello}, ${1+2+4}", "hellp", "world"));
 	}
 }

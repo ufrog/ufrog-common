@@ -146,6 +146,39 @@ public abstract class Assert {
 	}
 	
 	/**
+	 * 判断为真
+	 * 
+	 * @param bool
+	 * @param message
+	 * @param key
+	 */
+	public static void isTrue(Boolean bool, String message, String key) {
+		if (!bool) {
+			Logger.warn("it is false.");
+			throw new ServiceException(message, key);
+		}
+	}
+	
+	/**
+	 * 判断为真
+	 * 
+	 * @param bool
+	 * @param message
+	 */
+	public static void isTrue(Boolean bool, String message) {
+		isTrue(bool, message, null);
+	}
+	
+	/**
+	 * 判断为真
+	 * 
+	 * @param bool
+	 */
+	public static void isTrue(Boolean bool) {
+		isTrue(bool, null);
+	}
+	
+	/**
 	 * 断言相等
 	 * 
 	 * @param one

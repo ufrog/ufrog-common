@@ -131,4 +131,14 @@ public abstract class Files {
 			}
 		}
 	}
+	
+	/**
+	 * 转换成字节数组
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public static byte[] toBytes(String path) {
+		return toBytes(getFile(path));
+	}
 }

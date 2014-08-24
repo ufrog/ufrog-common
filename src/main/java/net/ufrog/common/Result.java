@@ -176,6 +176,13 @@ public class Result<T extends Serializable> implements Serializable {
 	}
 	
 	/**
+	 * @return
+	 */
+	public boolean isResult() {
+		return true;
+	}
+	
+	/**
 	 * 类型
 	 * 
 	 * @author ultrafrog
