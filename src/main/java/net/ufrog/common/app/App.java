@@ -60,6 +60,13 @@ public abstract class App {
 	public abstract Locale getLocale();
 	
 	/**
+	 * 读取验证信息
+	 * 
+	 * @return
+	 */
+	public abstract Validation getValidation();
+	
+	/**
 	 * 读取国际化消息
 	 * 
 	 * @param key

@@ -45,6 +45,8 @@ public class WebApp extends App {
 	protected HttpServletRequest request;
 	//protected HttpServletResponse response;
 	
+	private Validation validation;
+	
 	/**
 	 * 构造函数
 	 * 
@@ -53,6 +55,7 @@ public class WebApp extends App {
 	 */
 	public WebApp(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
+		this.validation = new Validation();
 		//this.response = response;
 	}
 	
@@ -61,7 +64,7 @@ public class WebApp extends App {
 	 */
 	@Override
 	public AppUser getUser() {
-		return AppUser.class.cast(request.getSession().getAttribute(SESSION_USER));
+		return session(SESSION_USER, AppUser.class);
 	}
 	
 	/* (non-Javadoc)
@@ -69,13 +72,7 @@ public class WebApp extends App {
 	 */
 	@Override
 	public AppUser setUser(AppUser user) {
-		if (user == null) {
-			HttpSession session = request.getSession(false);
-			if (session != null) session.removeAttribute(SESSION_USER);
-		} else {
-			request.getSession().setAttribute(SESSION_USER, user);
-		}
-		return user;
+		return session(SESSION_USER, user);
 	}
 	
 	/* (non-Javadoc)
@@ -83,10 +80,8 @@ public class WebApp extends App {
 	 */
 	@Override
 	public String getToken() {
-		if (request.getSession().getAttribute(SESSION_TOKEN) == null) {
-			return updateToken();
-		}
-		return String.class.cast(request.getSession().getAttribute(SESSION_TOKEN));
+		String token = session(SESSION_TOKEN, String.class);
+		return (token == null) ? updateToken() : token;
 	}
 	
 	/* (non-Javadoc)
@@ -94,9 +89,7 @@ public class WebApp extends App {
 	 */
 	@Override
 	public String updateToken() {
-		String token = Codecs.uuid();
-		request.getSession().setAttribute(SESSION_TOKEN, token);
-		return token;
+		return session(SESSION_TOKEN, Codecs.uuid());
 	}
 	
 	/* (non-Javadoc)
@@ -105,6 +98,14 @@ public class WebApp extends App {
 	@Override
 	public Locale getLocale() {
 		return request.getLocale();
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.ufrog.common.app.App#getValidation()
+	 */
+	@Override
+	public Validation getValidation() {
+		return validation;
 	}
 	
 	/* (non-Javadoc)
@@ -121,6 +122,40 @@ public class WebApp extends App {
 	@Override
 	public String toString() {
 		return getPath();
+	}
+	
+	/**
+	 * @param key
+	 * @param obj
+	 * @return
+	 */
+	public <T> T session(String key, T obj) {
+		if (obj == null) {
+			HttpSession session = request.getSession(false);
+			if (session != null) {
+				session.removeAttribute(key);
+			}
+			return null;
+		}
+		request.getSession().setAttribute(key, obj);
+		return obj;
+	}
+	
+	/**
+	 * @param key
+	 * @return
+	 */
+	public Object session(String key) {
+		return request.getSession().getAttribute(key);
+	}
+	
+	/**
+	 * @param key
+	 * @param requiredType
+	 * @return
+	 */
+	public <T> T session(String key, Class<T> requiredType) {
+		return requiredType.cast(session(key));
 	}
 	
 	/**

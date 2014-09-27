@@ -1,5 +1,6 @@
 package net.ufrog.common.utils;
 
+import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -35,9 +36,20 @@ public abstract class Cryptos {
 	 * @return
 	 */
 	public static byte[] hash(String str, HashType hashType) {
+		return hash(str.getBytes(Charset.forName("utf-8")), hashType);
+	}
+	
+	/**
+	 * 散列字符串
+	 * 
+	 * @param bytes
+	 * @param hashType
+	 * @return
+	 */
+	public static byte[] hash(byte[] bytes, HashType hashType) {
 		try {
 			MessageDigest md = MessageDigest.getInstance(hashType.toString());
-			return md.digest(str.getBytes());
+			return md.digest(bytes);
 		} catch (NoSuchAlgorithmException e) {
 			Logger.error(e.getMessage(), e);
 			return null;
